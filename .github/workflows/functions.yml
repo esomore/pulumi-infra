@@ -1,0 +1,72 @@
+name: Pulumi
+on:
+  # Whenever we create a pull request to make changes to the infrastructure
+  pull_request:
+    branches:
+      - '*'
+  
+  # We are going to maintain a Pulumi stack per branch as described in depth here:
+  # https://www.pulumi.com/docs/guides/continuous-delivery/#using-branches-for-environments
+  # https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/#aligning-to-git-repos
+  push:
+    branches:
+      - dev
+      - stg
+      - prod
+
+jobs:
+  
+  preview:
+    name: Preview
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Get short SHA
+        id: slug
+        run: echo "::set-output name=sha7::$(echo ${GITHUB_SHA} | cut -c1-7)"
+
+      - uses: pulumi/actions@v1
+        with:
+          command: preview
+        env:
+          PULUMI_ROOT: functions
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          
+          IS_PR_WORKFLOW: pr
+
+          SHA7: ${{ steps.slug.outputs.sha7 }}
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+          GITHUB_USERNAME: ${{ github.repository_owner }}
+          COMMENT_ON_PR: 1
+  
+  up:
+    name: Update
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Get short SHA
+        id: slug
+        run: echo "::set-output name=sha7::$(echo ${GITHUB_SHA} | cut -c1-7)"
+
+      - uses: pulumi/actions@v1
+        with:
+          command: up
+        env:
+          PULUMI_ROOT: functions
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+          SHA7: ${{ steps.slug.outputs.sha7 }}
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+          GITHUB_USERNAME: ${{ github.repository_owner }}
