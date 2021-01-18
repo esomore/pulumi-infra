@@ -9,3 +9,5 @@ and:
 https://github.com/pulumi/examples/tree/master/testing-pac-ts
 
 checkout the github actions to see how everything is hooked up.
+
+also look at this PR as an example: https://github.com/yokiworks/pulumi-infra/pull/1
