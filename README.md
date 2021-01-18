@@ -7,3 +7,5 @@ https://github.com/pulumi/examples/blob/master/aws-ts-lambda-thumbnailer/README.
 and:
 
 https://github.com/pulumi/examples/tree/master/testing-pac-ts
+
+checkout the github actions to see how everything is hooked up.
