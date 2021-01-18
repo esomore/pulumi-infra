@@ -13,6 +13,10 @@ const stackPolicy: policy.StackValidationPolicy = {
         if (lambdaFunctions.length < 1) {
             reportViolation(`Expected at least one lambda function but found ${lambdaFunctions.length}`);
             return;
+        } else {
+            lambdaFunctions.forEach(func => {
+                console.log('Fund functions: ' + func.name)
+            });
         }
     },
 }

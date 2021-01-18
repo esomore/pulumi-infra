@@ -6,9 +6,8 @@
         "@pulumi/pulumi": "^2.0.0",
         "@pulumi/policy": "latest",
         "@pulumi/aws": "^3.17.0",
-        "@pulumi/awsx": "^0.23.0"
-    },
-    "devDependencies": {
-        "@types/node": "^8.0.0"
+        "@pulumi/awsx": "^0.23.0",
+        "@types/node": "^13.1.8",
+        "ts-node": "^8.6.2"
     }
 }
